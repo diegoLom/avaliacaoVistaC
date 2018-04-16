@@ -28,14 +28,7 @@ public class AvaliacaoVistaApplicationTests {
 	}
 
 	public static void main(String[] args) {
-	Contato contato = new Contato();
-	contato.setEmpresa(new Empresa());
-	
-	
-	contato.getEmpresa().setCnpj(328734923L);
-	
-	new Geral().resultadoOuNulo(contato, "empresa.cnpj");
-	
+		System.out.println(System.getProperty("user.dir"));
 	
 	}
 
