@@ -1,0 +1,110 @@
+<!DOCTYPE html>
+<html lang="pt" xmlns="http://www.w3.org/1999/xhtml" 
+	xmlns:th="http://www.thymeleaf.org"
+	xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+	layout:decorate="~{layout/LayoutPadrao}">
+
+
+<head>
+    <title>Contato</title>
+</head>
+<body>
+<section layout:fragment="conteudo">
+    <div class="panel panel-default">
+        <div class="panel-heading">
+            <strong>Contato</strong>
+        </div>
+        
+        <div class="panel panel-default" style="margin:10px" > 
+    	 
+  			<div class="panel-heading">  
+  				<h1 class="panel-title">Pesquisa de Contatos </h1>  
+  			<div class="container-fluid"> 
+ 		 	   <form  method="POST" th:object="${contatoFilter}" th:action="@{/contatos}" style="margin: 20px 0"> 
+ 		 			<p th:if="${#fields.hasErrors('dataInicial')}" class="erro-mensagem" th:errors="*{dataInicial}">Data Inicial</p> 
+ 			 		<p th:if="${#fields.hasErrors('dataFinal')}" class="erro-mensagem" th:errors="*{dataFinal}">Data Final</p>            
+ 			        <div class="row">
+		        	  <div class="form-group  col-sm-8" >
+		        		<label for="nomeContato">Nome</label> 
+						<input type="text" class="form-control" placeholder="Nome" th:field="*{nomeContato}"/>  
+		        	  </div>
+		        	  <div class="form-group  col-sm-4" >
+		        	  	
+ 						<label for="nomeContato">CPF</label>
+ 						<input type="text" class="form-control cpf" placeholder="CPF" th:field="*{cpfFormatado}"/>
+ 						</div>
+		        	  </div>
+		        	  <div class="row">
+		        	  	<div class=" form-group  col-sm-4" >	
+		        	  		<label for="dataInicial">Data Inicial</label> 
+	 						<input type="text" class="form-control datepicker" placeholder="Data Inicial"  data-provide="datepicker" th:field="*{dataInicial}"/>
+		        	  	</div>
+		        	  	<div class="form-group  col-sm-4" >	
+		        	  		<label for="dataFinal">Data Final</label> 
+ 							<input type="text" class="form-control datepicker" placeholder="Data Final" data-provide="datepicker" th:field="*{dataFinal}"/>	
+		        	  	</div>
+		        	  	<div class="form-group  col-sm-2" >	
+		        	  			
+		        	  	</div>
+		        	  	<div class="form-group  col-sm-1" >
+		        	  		<label></label>
+		        	  		<button type="submit" class="btn btn-primary">Pesquisar</button>
+		        	  	</div>	
+		        	  	<div class="form-group  col-sm-1" >	
+		        	  		<label></label>
+							<input type="button" class="btn btn-primary" id="limpar" value="Limpar"> </input> 
+	 					</div>
+		        	  	
+		        	  	</div>
+ 			        		 
+ 						</form> 
+  			  </div>  
+  			  </div>  
+ 			</div> 
+        
+      <div class="panel-body">
+            <div class="table-responsive">
+                <table class="table table-sm table-striped table-hover table-bordered">
+                	
+                	<thead>
+         				<tr> 
+	 						<th > Código </th> 
+	 						<th > Nome </th>
+	 						<th > CPF </th>  
+	 						<th > Tel. Residencial</th>
+	 						<th > Tel. Celular</th>
+	 						<th > Email </th>
+	 						<th></th> 
+	 					</tr>	 
+					</thead> 
+	 				<tbody> 
+	 					<tr th:each="contato:${contatos}"> 
+	 						<td th:text="${contato.codigoContato}"> </td>
+	 						<td th:text="${contato.nomeContato}"> </td>  
+	 						<td th:text="${contato.cpfFormatado}"> </td>
+	 						<td th:text="${contato.telefoneResidencialFormatado}"> </td>
+	 						<td th:text="${contato.telefoneCelularFormatado}"> </td>
+	 						<td th:text="${contato.email}"> </td> 
+	 						<td>
+                                <div class="btn-group pull-right">
+                                    <a class="btn btn-sm btn-primary" th:href="@{/contatos/edit/{id}(id=${contato.codigoContato})}" >Editar</a>
+                                    <a class="delete btn btn-sm btn-danger" th:href="@{/contatos/delete/{id}(id=${contato.codigoContato})}">Excluir</a>
+                               </div>
+                            </td>
+                        </tr> 
+	 			</table>
+            </div>
+        </div>
+        <div class="panel-footer">
+            <a class="btn btn-sm btn-primary" th:href="@{/contatos/add/}" >Adicionar</a>
+            <a class="btn btn-sm btn-primary" th:href="@{/contatos/download/}" >Exportar</a>
+        </div>
+    </div>
+    </section>
+</body>
+</html>
+
+
+
+
+

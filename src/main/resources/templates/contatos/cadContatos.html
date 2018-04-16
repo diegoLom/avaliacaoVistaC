@@ -1,0 +1,109 @@
+<!DOCTYPE html>
+<html lang="pt" xmlns="http://www.w3.org/1999/xhtml" 
+	xmlns:th="http://www.thymeleaf.org"
+	xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+	layout:decorate="~{layout/LayoutPadrao}">
+	
+<head>
+    <title>Cadastro de Contatos</title>
+    
+
+
+    
+</head>
+<body>
+<section layout:fragment="conteudo">
+    <div class="panel panel-default">
+        <div class="panel-heading">
+            <strong>Cadastro de Contatos</strong>
+        </div>
+        <div class="panel-body">
+            <form class="form-horizontal" th:object="${contato}" th:action="@{/contatos/save}" method="POST" style="margin: 10px">
+                <div class="form-group">
+                    <fieldset>
+                           <div class="form-group row">
+                            <div class="alert alert-danger" th:if="${#fields.hasAnyErrors()}">
+                                 
+                             <div th:each="err : ${#fields.errors('*')}"> 
+                                   <span th:text="${err}"></span>
+                               </div> 
+                           </div> 
+                        </div>               
+                        <div class="form-group row">
+                            <div class="col-md-1">
+                                <input type="text" class="form-control input-sm" id="codigoContato" th:field="*{codigoContato}" readOnly="readonly"/>
+                            </div>
+                         </div>
+                        <div class="form-group row">                                                          
+                            <div class="col-md-4" th:classappend="${#fields.hasErrors('nomeContato')}? 'has-error'">
+                                <label>Nome</label>
+                                <input type="text" class="form-control input-sm" th:field="*{nomeContato}" autofocus="autofocus" placeholder="Digite o Nome" maxlength="50"/>
+                            </div>
+                        </div>
+                        <div class="form-group row">                                                          
+                            <div class="col-md-4" th:classappend="${#fields.hasErrors('cpf')}? 'has-error'">
+                                <label>CPF</label>
+                                <input type="text" class="form-control input-sm cpf" th:field="*{cpfFormatado}" th:readonly="*{codigoContato != null}" autofocus="autofocus" placeholder="Digite o CPF"/>
+                            </div>
+                        </div>   
+                        <div class="form-group row">                                                          
+                            <div class="col-md-4" th:classappend="${#fields.hasErrors('telefoneResidencial')}? 'has-error'">
+                                <label>Tel. Residencial</label>
+                                <input type="text" class="form-control input-sm phone" th:field="*{telefoneResidencialFormatado}" autofocus="autofocus" placeholder="Digite o Telefone Residencial" />
+                            </div>
+                        </div>   
+                         <div class="form-group row">                                                          
+                            <div class="col-md-4" th:classappend="${#fields.hasErrors('telefoneCelular')}? 'has-error'">
+                                <label>Tel. Celular</label>
+                                <input type="text" class="form-control input-sm phone" th:field="*{telefoneCelularFormatado}"  autofocus="autofocus" placeholder="Digite o Telefone Residencial" />
+                            </div>
+                        </div>  
+						<div class="form-group row">                                                          
+                            <div class="col-md-4" th:classappend="${#fields.hasErrors('email')}? 'has-error'">
+                                <label>Email</label>
+                                <input type="text" class="form-control input-sm" th:field="*{email}"  autofocus="autofocus" placeholder="Digite o Email" maxlength="50"/>
+                            </div>
+                        </div>  
+                        
+					<div class="form-group row"> 
+						<div class="col-md-4">                                                         
+							<label for="area" class="control-label">Área</label>
+							<select id="area" class="form-control" th:field="*{area.codigoArea}">
+								<option value="">Selecione a Área</option>
+								<option th:each="area : ${areas}" th:value="${area.codigoArea}" th:text="${area.descricaoArea}"></option>
+							</select>
+						</div>	
+                     </div>
+                  
+                   
+                   		<div class="form-group row">
+                   			<div class="col-md-4">                                                          
+								<label for="empresa" class="control-label">Empresa</label>
+								<select id="empresa" class="form-control" th:field="*{empresa.codigoEmpresa}">
+									<option value="">Selecione a Empresas</option>
+									<option th:each="empresa : ${empresas}" th:value="${empresa.codigoEmpresa}" th:text="${empresa.nomeEmpresa}"></option>
+								</select>
+							</div>	
+                        </div>
+                  
+                   
+                		<div class="form-group row">                                                          
+                            <div class="col-md-4" >
+                                <label>Data Cadastro</label>
+                                <input type="text" class="form-control input-sm" th:field="*{dataRegistro}" readOnly="readonly"/>
+                            </div>
+                        </div>
+                    
+               
+                <div class="form-group row">
+                    <button type="submit" class="btn btn-sm btn-primary">Salvar</button>
+                    <a th:href="@{/empresas}" class="btn btn-sm btn-default">Cancelar</a>
+                </div>
+                </fieldset>
+                 </div>
+            </form>
+        </div>
+    </div>
+</section>
+</body>
+</html>
