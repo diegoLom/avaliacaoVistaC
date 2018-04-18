@@ -10,7 +10,7 @@ import org.apache.poi.hssf.usermodel.HSSFSheet;
 import org.apache.poi.hssf.usermodel.HSSFWorkbook;
 import org.apache.poi.hssf.util.HSSFColor;
 import org.apache.poi.ss.usermodel.*;
-import org.springframework.stereotype.Component;
+
 import org.springframework.web.servlet.view.document.AbstractXlsView;
 
 import com.avaliacao.vista.util.Geral;
@@ -18,15 +18,15 @@ import com.avaliacao.vista.util.Geral;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-import static org.hamcrest.CoreMatchers.instanceOf;
 
-import java.lang.reflect.Method;
+
+
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.Set;
+
 
 /**
  * Created by aboullaite on 2017-02-23.
