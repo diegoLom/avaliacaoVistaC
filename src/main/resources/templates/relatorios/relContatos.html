@@ -27,26 +27,26 @@
  					<div class="row">
 	 			        	<div class="form-group  col-sm-2" >
 				        	  	<label for="nomeEmpresa">Cód. CPF</label>
-		 						<input type="text" class="form-control cpf" placeholder="cpf" th:field="*{cpfFormatado}"/>
+		 						<input type="text" class="form-control cpf" placeholder="cpf" th:field="*{contato.cpfFormatado}"/>
 							</div>
 	 			      		<div class="form-group  col-sm-5" >
 				        		<label for="nomeEmpresa">Nome do Contato</label> 
-								<input type="text" class="form-control" placeholder="Nome" th:field="*{nomeContato}"/>  
+								<input type="text" class="form-control" placeholder="Nome" th:field="*{contato.nomeContato}"/>  
 				        	  </div>
 				        	  <div class="form-group  col-sm-5" >
 				        		<label for="nomeEmpresa">Área</label> 
-								<input type="text" class="form-control" placeholder="Nome" th:field="*{area.descricaoArea}"/>  
+								<input type="text" class="form-control" placeholder="Nome" th:field="*{contato.area.descricaoArea}"/>  
 				        	  </div>
 				        </div>
 
  			        <div class="row">
 	 			        	<div class="form-group  col-sm-2" >
 				        	  	<label for="nomeEmpresa">Cód. CNPJ</label>
-		 						<input type="text" class="form-control cnpj" placeholder="CNPJ" th:field="*{empresa.cnpjFormatado}"/>
+		 						<input type="text" class="form-control cnpj" placeholder="CNPJ" th:field="*{contato.empresa.cnpjFormatado}"/>
 							</div>
 	 			      		<div class="form-group  col-sm-5" >
 				        		<label for="nomeEmpresa">Nome da Empresa</label> 
-								<input type="text" class="form-control" placeholder="Nome" th:field="*{empresa.nomeEmpresa}"/>  
+								<input type="text" class="form-control" placeholder="Nome" th:field="*{contato.empresa.nomeEmpresa}"/>  
 				        	  </div>
 				        	  <div class=" form-group  col-sm-2" >	
 			        	  		<label for="dataInicial">Data Inicial</label> 
@@ -114,7 +114,7 @@
 <!--         </div> -->
         <div class="panel-footer">
 <!--             <a class="btn btn-sm btn-primary" th:href="@{/contatos/add/}" >Adicionar</a> -->
-            <a class="btn btn-sm btn-primary" th:href="@{/contatos/download/}" >Exportar</a>
+            <a class="btn btn-sm btn-primary" th:href="@{/contatos/downloadRelatorioE/}" >Exportar</a>
         </div>
     </div>
     </section>

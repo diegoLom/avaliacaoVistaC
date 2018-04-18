@@ -38,6 +38,7 @@ import com.avaliacao.vista.model.Empresa;
 import com.avaliacao.vista.repository.Areas;
 import com.avaliacao.vista.repository.Contatos;
 import com.avaliacao.vista.repository.Empresas;
+import com.avaliacao.vista.util.Geral;
 import com.avaliacao.vista.view.ExcelView;
 import com.avaliacao.vista.view.PdfView;
 
@@ -79,6 +80,7 @@ public class ContatoController {
 		modelView.addObject(new ContatoFilter());
 		
 		
+		
 		return modelView;
 	}
 	
@@ -112,11 +114,21 @@ public class ContatoController {
     public ModelAndView add(Contato contato) {
          
         ModelAndView mv = new ModelAndView("contatos/cadContatos");
-        contato.setArea(new Area());
-        contato.setEmpresa(new Empresa());
+        if(contato.getCodigoContato() == null) {
+	        contato.setArea(new Area());
+	        contato.setEmpresa(new Empresa());
+        }
         mv.addObject("contato", contato);
         mv.addObject("empresas", empresas.findAll());
         mv.addObject("areas", areas.findAll());
+        
+//        if(Geral.resultadoOuNulo(contato, "area.codigoArea") != null) {
+//        	mv.addObject("areaId", contato.getArea().getCodigoArea());
+//        }
+//        
+//        if(Geral.resultadoOuNulo(contato, "empresa.codigoEmpresa") != null) {
+//        	mv.addObject("empresaId", contato.getEmpresa().getCodigoEmpresa());
+//        }
          
         return mv;
     }
@@ -125,10 +137,8 @@ public class ContatoController {
     public ModelAndView edit(@PathVariable("id") Long id) {
     	
     	Optional<Contato> areaO = contatos.findById(id);
-    	if(areaO.get() != null) {
-    	 
-    	}
-         
+    	
+    	
         return add(areaO.get());
     }
      
@@ -198,6 +208,36 @@ public class ContatoController {
         return new ModelAndView(new ExcelView(), model);
     }
     
+    @GetMapping("/downloadRelatorioE")
+    public ModelAndView getMyDataE(ContatoFilter area, HttpServletRequest request, HttpServletResponse response) {
+        
+    	Map<String, Object> model = new HashMap<String, Object>();
+    	
+        model.put("results",contatosFiltradas != null ? contatosFiltradas : contatos.findAll());
+      
+              
+         
+        
+        LinkedHashMap<String, String> columnsTitle = new LinkedHashMap<String, String>();
+        
+        columnsTitle.put("empresa.cnpj","CNPJ Empresa");
+        columnsTitle.put("empresa.nomeEmpresa","Nome da Empresa");
+        columnsTitle.put("nomeContato","Nome Contato");
+        columnsTitle.put("cpfFormatado", "CPF");
+        columnsTitle.put("telefoneResidencialFormatado" , "Telefone Residencial");
+        columnsTitle.put("telefoneCelularFormatado" , "Celular");
+        columnsTitle.put("email" , "Email");
+        columnsTitle.put("area.descricaoArea" , "Área"); 
+        
+    	
+        model.put("columnsTitle", columnsTitle);
+        
+        response.setContentType( "application/ms-excel" );
+        response.setHeader( "Content-disposition", "attachment; filename=contatos.xls" );
+        
+        return new ModelAndView(new ExcelView(), model);
+    }
+    
     @GetMapping("/prepararDownload")
 	public ModelAndView prepararDownload() {
 		ModelAndView modelView = new ModelAndView("relatorios/relContatos");
@@ -210,12 +250,13 @@ public class ContatoController {
 	}
     
     
-    @GetMapping("/downloadRelatorio")
+    @PostMapping("/downloadRelatorio")
     public ModelAndView getMyDataP(ContatoFilter area, HttpServletRequest request, HttpServletResponse response) {
         
     	Map<String, Object> model = new HashMap<String, Object>();
+    	contatosFiltradas = filtrar(area);
     	
-        model.put("results",contatosFiltradas != null ? contatosFiltradas : contatos.findAll());
+        model.put("results",contatosFiltradas);
       
               
         LinkedHashMap<String, String> columnsTitle = new LinkedHashMap<String, String>();
@@ -223,17 +264,17 @@ public class ContatoController {
         columnsTitle.put("empresa.cnpj","CNPJ Empresa");
         columnsTitle.put("empresa.nomeEmpresa","Nome da Empresa");
         columnsTitle.put("nomeContato","Nome Contato");
-        columnsTitle.put("cpf", "CPF");
-        columnsTitle.put("telefoneResidencial" , "Telefone Residencial");
-        columnsTitle.put("telefoneCelular" , "Celular");
+        columnsTitle.put("cpfFormatado", "CPF");
+        columnsTitle.put("telefoneResidencialFormatado" , "Telefone Residencial");
+        columnsTitle.put("telefoneCelularFormatado" , "Celular");
         columnsTitle.put("email" , "Email");
         columnsTitle.put("area.descricaoArea" , "Área"); 
         
     	
         model.put("columnsTitle", columnsTitle);
         
-        response.setContentType( "application/ms-excel" );
-        response.setHeader( "Content-disposition", "attachment; filename=contatos.xls" );
+        response.setContentType( "application/pdf" );
+        response.setHeader( "Content-disposition", "attachment; filename=contatos.pdf" );
         
         return new ModelAndView(new PdfView(), model);
     }
@@ -252,16 +293,26 @@ public class ContatoController {
 			Predicate predicate = criteriaBuilder.between(root.get("dataRegistro"),contato.getDataInicial(), contato.getDataFinal());
 			criteriaQuery.where(predicate);
 		}
-		   
-		if(contato.getEmpresa() != null && contato.getEmpresa().getCnpj() != null)
-			criteriaQuery.where(criteriaBuilder.equal(root.get("empresa.cnpj"), contato.getEmpresa().getCnpj()));
 		
-		if(contato.getEmpresa() != null && contato.getEmpresa().getNomeEmpresa() != null && !contato.getEmpresa().getNomeEmpresa().isEmpty())
-			criteriaQuery.where(criteriaBuilder.equal(root.get("empresa.nomeEmpresa"), contato.getEmpresa().getNomeEmpresa()));
+		Object cpf = Geral.resultadoOuNulo(contato, "contato.cpf");
+		if(cpf != null)
+			criteriaQuery.where(criteriaBuilder.equal(root.get("cpf"), cpf));
 		
+		Object nomeContato = Geral.resultadoOuNulo(contato, "contato.nomeContato");
+		if(nomeContato != null && !nomeContato.toString().isEmpty())
+			criteriaQuery.where(criteriaBuilder.equal(root.get("empresa.nomeContato"), contato));
 		
-		if(contato.getArea() != null && contato.getArea().getDescricaoArea() != null && !contato.getArea().getDescricaoArea().isEmpty())
-			criteriaQuery.where(criteriaBuilder.equal(root.get("area.descricaoArea"), contato.getArea().getDescricaoArea()));
+		Object cnpj = Geral.resultadoOuNulo(contato, "contato.empresa.cnpj");
+		if(cnpj != null)
+			criteriaQuery.where(criteriaBuilder.equal(root.get("empresa.cnpj"), cnpj));
+		
+		Object nomeEmpresa = Geral.resultadoOuNulo(contato, "contato.empresa.nomeEmpresa");
+		if(nomeEmpresa != null && !nomeEmpresa.toString().isEmpty())
+			criteriaQuery.where(criteriaBuilder.equal(root.get("empresa.nomeEmpresa"), contato));
+		
+		Object area = Geral.resultadoOuNulo(contato, "contato.area.descricaoArea");
+		if(area != null && !area.toString().isEmpty())
+			criteriaQuery.where(criteriaBuilder.equal(root.get("area.descricaoArea"), area));
 		
 		TypedQuery<Object> typedQuery = getSession().createQuery( criteriaQuery);
 		

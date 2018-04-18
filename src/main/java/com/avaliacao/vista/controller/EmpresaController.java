@@ -66,6 +66,7 @@ import com.avaliacao.vista.model.Empresa;
 import com.avaliacao.vista.model.EmpresaFilter;
 import com.avaliacao.vista.model.ErroValue;
 import com.avaliacao.vista.repository.Empresas;
+import com.avaliacao.vista.util.Geral;
 import com.avaliacao.vista.view.ExcelView;
 
 @Controller
@@ -209,12 +210,14 @@ public class EmpresaController implements WebMvcConfigurer  {
 			criteriaQuery.where(predicate);
 		}
 		   
-		   
-		if(empresa.getNomeEmpresa() != null && !empresa.getNomeEmpresa().isEmpty())
-			criteriaQuery.where(criteriaBuilder.equal(root.get("nomeempresa"), empresa.getNomeEmpresa()));
+		Object nomeEmpresa = Geral.resultadoOuNulo(empresa, "empresa.nomeEmpresa"); 
+		if(nomeEmpresa != null && !nomeEmpresa.toString().isEmpty() )
+			criteriaQuery.where(criteriaBuilder.equal(root.get("nomeempresa"), nomeEmpresa));
 		
-		if(empresa.getCnpj() != null )
-			criteriaQuery.where(criteriaBuilder.equal(root.get("cnpj"), empresa.getCnpj()));
+		
+		Object cnpj = Geral.resultadoOuNulo(empresa, "empresa.cnpj"); 
+		if(cnpj != null )
+			criteriaQuery.where(criteriaBuilder.equal(root.get("cnpj"), cnpj));
 		
 		    
 		TypedQuery<Object> typedQuery = getSession().createQuery( criteriaQuery);

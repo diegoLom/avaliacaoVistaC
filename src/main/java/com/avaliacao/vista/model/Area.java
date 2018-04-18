@@ -1,9 +1,11 @@
 package com.avaliacao.vista.model;
 
+import java.beans.Transient;
 import java.io.Serializable;
 import java.util.Date;
 
 import javax.persistence.Column;
+import javax.persistence.Embeddable;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
@@ -21,11 +23,24 @@ import org.springframework.stereotype.Component;
 
 @Entity
 @Table(name="area")
-@UniqueKey(columnNames={"descricaoArea"}, message="Descrição já existente")
+@UniqueKey(columnNames={"descricaoArea"}, message="Descrição já existente", propertyId ="codigoArea" )
+@Embeddable
 public class Area implements Serializable {
 	
+	public Long getAreaId() {
+		return areaId;
+	}
+
+	public void setAreaId(Long areaId) {
+		this.areaId = areaId;
+	}
+
 	@Column(name="descricaoarea", unique=true, nullable=false)
 	private String descricaoArea;
+	
+	private Long areaId;
+	
+	
 	
 	@Id
 	@GeneratedValue(strategy=GenerationType.SEQUENCE)
@@ -45,7 +60,8 @@ public class Area implements Serializable {
 	public void setDescricaoArea(String descricaoArea) {
 		this.descricaoArea = descricaoArea;
 	}
-
+	
+	@Transient
 	@Description(value="Código")
 	public Long getCodigoArea() {
 		return codigoArea;

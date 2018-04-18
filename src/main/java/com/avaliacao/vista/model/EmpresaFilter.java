@@ -8,9 +8,11 @@ import javax.validation.constraints.NotNull;
 
 import org.springframework.format.annotation.DateTimeFormat;
 
-public class EmpresaFilter extends Empresa{
+public class EmpresaFilter implements Serializable{
 	
 	
+
+
 	public Date getDataInicial() {
 		return dataInicial;
 	}
@@ -34,10 +36,23 @@ public class EmpresaFilter extends Empresa{
 	@NotNull(message="{validation.dataFinal.notNull}")
 	@DateTimeFormat(pattern = "dd/MM/yyyy")
 	private Date dataFinal;
+	
+	
+	private Empresa empresa;
+	
+	public Empresa getEmpresa() {
+		return empresa;
+	}
 
+	public void setEmpresa(Empresa empresa) {
+		this.empresa = empresa;
+	}
 	
 	
-	
+	public EmpresaFilter() {
+		super();
+		empresa = new Empresa();
+	}
 	
 	
 	

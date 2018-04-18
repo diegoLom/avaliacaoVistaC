@@ -21,10 +21,12 @@ import javax.validation.constraints.Size;
 
 import org.springframework.format.annotation.DateTimeFormat;
 
+import com.avaliacao.vista.services.UniqueKey;
+
 
 @Entity
-@Table(name="contato", uniqueConstraints=
-@UniqueConstraint(columnNames = {"cpf", "nomecontato", "codigoempresa"}) )
+@Table(name="contato")
+@UniqueKey(columnNames = {"cpf", "nomeContato", "empresa.codigoEmpresa", "area.codigoArea" }, propertyId ="codigoContato") 
 public class Contato implements Serializable {
 	
 

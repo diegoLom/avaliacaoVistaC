@@ -17,6 +17,8 @@ import javax.persistence.criteria.Predicate;
 import javax.persistence.criteria.Root;
 import javax.validation.ConstraintValidator;
 import javax.validation.ConstraintValidatorContext;
+
+import java.beans.IntrospectionException;
 import java.beans.PropertyDescriptor;
 import java.io.Serializable;
 import java.lang.reflect.Method;
@@ -38,10 +40,12 @@ public class UniqueKeyValidator implements ConstraintValidator<UniqueKey, Serial
 	    }
 
     private String[] columnNames;
+    private String propertyId;
 
     @Override
     public void initialize(UniqueKey constraintAnnotation) {
         this.columnNames = constraintAnnotation.columnNames();
+        this.propertyId = constraintAnnotation.propertyId();
     }
 
     @Override
@@ -52,7 +56,7 @@ public class UniqueKeyValidator implements ConstraintValidator<UniqueKey, Serial
 	        CriteriaBuilder criteriaBuilder = getSession().getCriteriaBuilder();
 	
 	        CriteriaQuery<Object> criteriaQuery = criteriaBuilder.createQuery();
-	
+	        target.getClass().getAnnotations();
 	        Root<?> root = criteriaQuery.from(entityClass);
 	
 	        List<Predicate> predicates = new ArrayList<Predicate> (columnNames.length);
@@ -72,22 +76,37 @@ public class UniqueKeyValidator implements ConstraintValidator<UniqueKey, Serial
 	        
 	        criteriaQuery.select(root);
 	        
-	        //criteriaQuery.where(predicates.toArray(new Predicate[predicates.size()]));
 	        
-	        for (Iterator iterator = predicates.iterator(); iterator.hasNext();) {
-				Predicate predicate = (Predicate) iterator.next();
-				//criteriaBuilder.and(predicate);
-				criteriaQuery.where(predicate);
+            PropertyDescriptor desc;
+			try {
+				desc = new PropertyDescriptor(propertyId, entityClass);
+				Method readMethod = desc.getReadMethod();
+				Object propertyValue = readMethod.invoke(target);
+				
+				if(propertyValue != null) {
+					
+					   Predicate predicate = criteriaBuilder.not(root.get(propertyId).in(propertyValue));
+		                predicates.add(predicate);
+				}
+			      
+			} catch (Exception e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
 			}
+            
+//	        for (Iterator iterator = predicates.iterator(); iterator.hasNext();) {
+//				Predicate predicate = (Predicate) iterator.next();
+//				//criteriaBuilder.and(predicate);
+			
+			
+				criteriaQuery = criteriaQuery.where(criteriaBuilder.and(predicates.toArray(new Predicate[] {})));
+				
+		//	}
 	        
 	        
 	        
 	        
-	        
-	        
-	     //   criteriaQuery.multiselect(criteriaQuery.where(predicates.toArray(new Predicate[predicates.size()])));
-	        
-	        TypedQuery<Object> typedQuery = getSession().createQuery( criteriaQuery);
+			TypedQuery<Object> typedQuery = getSession().createQuery( criteriaQuery);
 	
 	        List<Object> resultSet = typedQuery.getResultList(); 
 	

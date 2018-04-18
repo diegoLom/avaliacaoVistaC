@@ -9,6 +9,22 @@
     
 
 
+<script type="text/javascript">
+$(document).ready(function () { 
+	
+	if($("#areaId").val() != null){
+		$("#area").val($("#areaId").val());
+	}
+	
+	if($("#empresaId") != null){
+		$("#empresa").val($("#empresaId").val());
+	}
+	
+	
+	
+});
+</script>
+
     
 </head>
 <body>
@@ -18,6 +34,7 @@
             <strong>Cadastro de Contatos</strong>
         </div>
         <div class="panel-body">
+        
             <form class="form-horizontal" th:object="${contato}" th:action="@{/contatos/save}" method="POST" style="margin: 10px">
                 <div class="form-group">
                     <fieldset>
@@ -68,6 +85,10 @@
 					<div class="form-group row"> 
 						<div class="col-md-4">                                                         
 							<label for="area" class="control-label">Área</label>
+							
+							
+							
+							
 							<select id="area" class="form-control" th:field="*{area.codigoArea}">
 								<option value="">Selecione a Área</option>
 								<option th:each="area : ${areas}" th:value="${area.codigoArea}" th:text="${area.descricaoArea}"></option>
@@ -79,6 +100,8 @@
                    		<div class="form-group row">
                    			<div class="col-md-4">                                                          
 								<label for="empresa" class="control-label">Empresa</label>
+								
+								
 								<select id="empresa" class="form-control" th:field="*{empresa.codigoEmpresa}">
 									<option value="">Selecione a Empresas</option>
 									<option th:each="empresa : ${empresas}" th:value="${empresa.codigoEmpresa}" th:text="${empresa.nomeEmpresa}"></option>
@@ -97,7 +120,7 @@
                
                 <div class="form-group row">
                     <button type="submit" class="btn btn-sm btn-primary">Salvar</button>
-                    <a th:href="@{/empresas}" class="btn btn-sm btn-default">Cancelar</a>
+                    <a th:href="@{/contatos}" class="btn btn-sm btn-default">Cancelar</a>
                 </div>
                 </fieldset>
                  </div>

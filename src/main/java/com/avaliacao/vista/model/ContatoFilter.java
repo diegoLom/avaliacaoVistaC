@@ -8,9 +8,23 @@ import javax.validation.constraints.NotNull;
 
 import org.springframework.format.annotation.DateTimeFormat;
 
-public class ContatoFilter extends Contato{
+public class ContatoFilter implements Serializable{
 	
 	
+	
+	public ContatoFilter() {
+		super();
+		contato = new Contato();
+	}
+
+	public Contato getContato() {
+		return contato;
+	}
+
+	public void setContato(Contato contato) {
+		this.contato = contato;
+	}
+
 	public Date getDataInicial() {
 		return dataInicial;
 	}
@@ -35,6 +49,8 @@ public class ContatoFilter extends Contato{
 	@DateTimeFormat(pattern = "dd/MM/yyyy")
 	private Date dataFinal;
 
+	private Contato contato;
+	
 	
 	
 	

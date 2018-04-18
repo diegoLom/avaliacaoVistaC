@@ -27,9 +27,10 @@ public class PdfView extends AbstractPdfView {
         response.setHeader("Content-Disposition", "attachment; filename=\"my-pdf-file.pdf\"");
 
         List users = (List) model.get("results");
-        document.add(new Paragraph("Generated Users " + LocalDate.now()));
-
-       PdfPTable table = new PdfPTable(users.size());
+       // document.add(new Paragraph("Generated Users " + LocalDate.now()));
+        	LinkedHashMap<String, String> columnsTitle = (LinkedHashMap<String, String>) model.get("columnsTitle");
+       PdfPTable table = new PdfPTable(columnsTitle.size());
+      
         table.setWidthPercentage(100.0f);
         table.setSpacingBefore(10);
 
@@ -40,9 +41,10 @@ public class PdfView extends AbstractPdfView {
         // define table header cell
         PdfPCell cell = new PdfPCell();
         cell.setBackgroundColor(BaseColor.DARK_GRAY);
-        cell.setPadding(5);
+        //cell.setPadding(5);
         
-        LinkedHashMap<String, String> columnsTitle = (LinkedHashMap<String, String>) model.get("columnsTitle");
+        
+        
         
         for(String colunaTitulo : columnsTitle.values()) {
         

@@ -22,7 +22,7 @@ import com.avaliacao.vista.services.UniqueKey;
 
 @Entity
 @Table(name="empresa")
-@UniqueKey(columnNames={"cnpj"}, message="CNPJ já existente")
+@UniqueKey(columnNames={"cnpj"}, message="CNPJ já existente",  propertyId ="codigoEmpresa")
 public class Empresa implements Serializable{
 	
 	@Id

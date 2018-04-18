@@ -17,13 +17,17 @@ import javax.validation.Payload;
 public @interface UniqueKey {
 	
 	
-	String[] columnNames();
+	String[]columnNames();
+	
+	String propertyId();
 
     String message() default "{UniqueKey.message}";
 
     Class<?>[] groups() default {};
 
     Class<? extends Payload>[] payload() default {};
+    
+    boolean multiplasValidacoes() default false;
 
     @Target({ ElementType.TYPE })
     @Retention(RetentionPolicy.RUNTIME)
