@@ -134,9 +134,9 @@
 		    <scope>compile</scope>
 		</dependency>
 		<dependency>
-    		<groupId>postgresql</groupId>
-    		<artifactId>postgresql</artifactId>
-    		<version>9.0-801.jdbc4</version>
+		    <groupId>org.postgresql</groupId>
+		    <artifactId>postgresql</artifactId>
+		    <version>9.4-1201-jdbc41</version>
 		</dependency>
 		
 
