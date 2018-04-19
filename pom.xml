@@ -121,11 +121,11 @@
 			<artifactId>itextpdf</artifactId>
 			<version>5.5.10</version>
 		</dependency>
-				<dependency>
-    		<groupId>postgresql</groupId>
-    		<artifactId>postgresql</artifactId>
-    		  <version>9.3-1100-jdbc41</version>
-		</dependency>
+	<dependency>
+    <groupId>postgresql</groupId>
+    <artifactId>postgresql</artifactId>
+    <version>9.1-901-1.jdbc4</version>
+</dependency>
 		
 		
 			<dependency>
