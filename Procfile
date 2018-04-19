@@ -1,5 +1,4 @@
-web: java $JAVA_OPTS -Dspring.profiles.active=prod -Dserver.port=$PORT -jar target/*.jar
-    --spring.config.location=classpath:heroku.db.properties
+web: java $JAVA_OPTS -Dspring.profiles.active=prod -Dserver.port=$PORT -jar target/*.jar --spring.config.location=classpath:heroku.db.properties
 
 
 
