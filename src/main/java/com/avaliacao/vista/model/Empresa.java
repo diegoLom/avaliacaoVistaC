@@ -34,6 +34,7 @@ public class Empresa implements Serializable{
 	@DateTimeFormat(pattern = "dd/MM/yyyy")
 	private Date dataRegistro;
 	
+	@NotBlank(message="O nome da Empresa obrigatório")
 	@Column(name="nomeempresa", nullable=false)
 	private String nomeEmpresa;
 	
@@ -73,6 +74,7 @@ public class Empresa implements Serializable{
 		this.cnpj = cnpj;
 	}
 	
+	@NotBlank(message="O cnpj é requerido")
 	private String cnpjFormatado;
 	
 	public String getCnpjFormatado() {

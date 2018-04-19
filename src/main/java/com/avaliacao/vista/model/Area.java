@@ -14,6 +14,7 @@ import javax.persistence.Table;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
 import javax.persistence.UniqueConstraint;
+import javax.validation.constraints.NotBlank;
 
 import org.springframework.context.annotation.Description;
 import org.springframework.format.annotation.DateTimeFormat;
@@ -35,6 +36,7 @@ public class Area implements Serializable {
 		this.areaId = areaId;
 	}
 
+	@NotBlank(message="Descrição da Área é requerido")	
 	@Column(name="descricaoarea", unique=true, nullable=false)
 	private String descricaoArea;
 	

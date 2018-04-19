@@ -17,6 +17,7 @@ import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
 import javax.persistence.UniqueConstraint;
 import javax.swing.text.MaskFormatter;
+import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.Size;
 
 import org.springframework.format.annotation.DateTimeFormat;
@@ -35,6 +36,7 @@ public class Contato implements Serializable {
 	@GeneratedValue
 	private Long codigoContato;
 	
+	@NotBlank(message="O nome do contato é requerido")
 	@Column(name="nomecontato")
 	private String nomeContato;
 	
@@ -137,7 +139,8 @@ public class Contato implements Serializable {
 	}
 
 	
-private String cpfFormatado;
+	@NotBlank(message="O cpf é requerido")
+	private String cpfFormatado;
 	
 	public String getCpfFormatado() {
 		
