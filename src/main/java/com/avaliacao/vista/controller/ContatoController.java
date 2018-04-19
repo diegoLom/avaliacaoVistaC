@@ -300,7 +300,7 @@ public class ContatoController {
 		
 		Object nomeContato = Geral.resultadoOuNulo(contato, "contato.nomeContato");
 		if(nomeContato != null && !nomeContato.toString().isEmpty())
-			criteriaQuery.where(criteriaBuilder.equal(root.get("nomeContato"), contato));
+			criteriaQuery.where(criteriaBuilder.like(root.get("nomeContato"), contato.toString()+"%"));
 		
 		Object cnpj = Geral.resultadoOuNulo(contato, "contato.empresa.cnpj");
 		if(cnpj != null)
@@ -308,11 +308,11 @@ public class ContatoController {
 		
 		Object nomeEmpresa = Geral.resultadoOuNulo(contato, "contato.empresa.nomeEmpresa");
 		if(nomeEmpresa != null && !nomeEmpresa.toString().isEmpty())
-			criteriaQuery.where(criteriaBuilder.equal(root.get("empresa.nomeEmpresa"), contato));
+			criteriaQuery.where(criteriaBuilder.like(root.get("empresa.nomeEmpresa"), nomeEmpresa+"%"));
 		
 		Object area = Geral.resultadoOuNulo(contato, "contato.area.descricaoArea");
 		if(area != null && !area.toString().isEmpty())
-			criteriaQuery.where(criteriaBuilder.equal(root.get("area.descricaoArea"), area));
+			criteriaQuery.where(criteriaBuilder.like(root.get("area.descricaoArea"), area+"%"));
 		
 		TypedQuery<Object> typedQuery = getSession().createQuery( criteriaQuery);
 		

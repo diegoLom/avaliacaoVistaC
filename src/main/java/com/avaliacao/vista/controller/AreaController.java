@@ -224,7 +224,7 @@ public class AreaController implements WebMvcConfigurer  {
 		   
 		   
 		if(area.getDescricaoArea() != null && !area.getDescricaoArea().isEmpty())
-			criteriaQuery.where(criteriaBuilder.equal(root.get("descricaoArea"), area.getDescricaoArea()));
+			criteriaQuery.where(criteriaBuilder.like(root.get("descricaoArea"), area.getDescricaoArea()+"%"));
 		    
 		TypedQuery<Object> typedQuery = getSession().createQuery( criteriaQuery);
 		
