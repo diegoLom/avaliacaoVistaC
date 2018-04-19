@@ -300,7 +300,7 @@ public class ContatoController {
 		
 		Object nomeContato = Geral.resultadoOuNulo(contato, "contato.nomeContato");
 		if(nomeContato != null && !nomeContato.toString().isEmpty())
-			criteriaQuery.where(criteriaBuilder.equal(root.get("empresa.nomeContato"), contato));
+			criteriaQuery.where(criteriaBuilder.equal(root.get("nomeContato"), contato));
 		
 		Object cnpj = Geral.resultadoOuNulo(contato, "contato.empresa.cnpj");
 		if(cnpj != null)

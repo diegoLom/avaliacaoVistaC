@@ -212,7 +212,7 @@ public class EmpresaController implements WebMvcConfigurer  {
 		   
 		Object nomeEmpresa = Geral.resultadoOuNulo(empresa, "empresa.nomeEmpresa"); 
 		if(nomeEmpresa != null && !nomeEmpresa.toString().isEmpty() )
-			criteriaQuery.where(criteriaBuilder.equal(root.get("nomeempresa"), nomeEmpresa));
+			criteriaQuery.where(criteriaBuilder.equal(root.get("nomeEmpresa"), nomeEmpresa));
 		
 		
 		Object cnpj = Geral.resultadoOuNulo(empresa, "empresa.cnpj"); 
