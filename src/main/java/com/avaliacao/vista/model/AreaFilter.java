@@ -8,6 +8,8 @@ import javax.validation.constraints.NotNull;
 
 import org.springframework.format.annotation.DateTimeFormat;
 
+import com.avaliacao.vista.util.DataUtil;
+
 public class AreaFilter implements Serializable {
 	
 	
@@ -34,7 +36,7 @@ public class AreaFilter implements Serializable {
 	}
 
 	public void setDataFinal(Date dataFinal) {
-		this.dataFinal = dataFinal;
+		this.dataFinal = DataUtil.converterUltimaHoraDia(dataFinal);
 	}
 
 	public String getDescricaoArea() {

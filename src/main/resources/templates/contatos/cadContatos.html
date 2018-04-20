@@ -29,11 +29,14 @@ $(document).ready(function () {
 </head>
 <body>
 <section layout:fragment="conteudo">
+
     <div class="panel panel-default">
+    
         <div class="panel-heading">
             <strong>Cadastro de Contatos</strong>
         </div>
         <div class="panel-body">
+        <th:block th:include="fragments/MensagemSucesso"></th:block>
         
             <form class="form-horizontal" th:object="${contato}" th:action="@{/contatos/save}" method="POST" style="margin: 10px">
                 <div class="form-group">

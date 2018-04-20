@@ -10,7 +10,9 @@
 </head>
 <body>
 <section layout:fragment="conteudo">
+
     <div class="panel panel-default">
+    
         <div class="panel-heading">
             <strong>Contato</strong>
         </div>
@@ -19,7 +21,9 @@
     	 
   			<div class="panel-heading">  
   				<h1 class="panel-title">Pesquisa de Contatos </h1>  
-  			<div class="container-fluid"> 
+  			<div class="container-fluid">
+  			
+  			<th:block th:include="fragments/MensagemSucesso"></th:block> 
  		 	   <form  method="POST" th:object="${contatoFilter}" th:action="@{/contatos}" style="margin: 20px 0"> 
  		 			<p th:if="${#fields.hasErrors('dataInicial')}" class="erro-mensagem" th:errors="*{dataInicial}">Data Inicial</p> 
  			 		<p th:if="${#fields.hasErrors('dataFinal')}" class="erro-mensagem" th:errors="*{dataFinal}">Data Final</p>            

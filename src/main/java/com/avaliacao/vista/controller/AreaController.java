@@ -60,12 +60,14 @@ import org.springframework.web.context.request.ServletRequestAttributes;
 import org.springframework.web.context.request.WebRequest;
 import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import com.avaliacao.vista.AppErrorController;
 import com.avaliacao.vista.model.Area;
 import com.avaliacao.vista.model.AreaFilter;
 import com.avaliacao.vista.model.ErroValue;
 import com.avaliacao.vista.repository.Areas;
+import com.avaliacao.vista.util.Geral;
 import com.avaliacao.vista.view.ExcelView;
 
 import nz.net.ultraq.thymeleaf.LayoutDialect;
@@ -135,48 +137,57 @@ public class AreaController implements WebMvcConfigurer  {
 	
 	  
     @GetMapping("/add")
-    public ModelAndView add(Area area) {
+    public ModelAndView add(Area area, RedirectAttributes attributes) {
          
         ModelAndView mv = new ModelAndView("areas/cadAreas");
         mv.addObject("area", area);
+        
+        if(attributes != null && Geral.resultadoOuNulo(area, "areaId") != null) {
+	        String mensagem = "Área editada com sucesso!";
+	        attributes.addFlashAttribute("mensagem", mensagem);
+        }
          
         return mv;
     }
      
     @GetMapping("/edit/{id}")
-    public ModelAndView edit(@PathVariable("id") Long id) {
+    public ModelAndView edit(@PathVariable("id") Long id, RedirectAttributes atributos) {
     	
     	Optional<Area> areaO = areas.findById(id);
     	if(areaO.get() != null) {
     	 
     	}
          
-        return add(areaO.get());
+        return add(areaO.get(), atributos);
     }
      
     @GetMapping("/delete/{id}")
-    public ModelAndView delete(@PathVariable("id") Long id) {
+    public ModelAndView delete(@PathVariable("id") Long id, RedirectAttributes atributos) {
     	
     	Optional<Area> areaO = areas.findById(id);
     	areas.delete(areaO.get());
          
+    	atributos.addFlashAttribute("Área excluída com sucesso");
+    	
         return listar();
     }
  
     @PostMapping("/save")
-    public ModelAndView save(@Valid Area area, BindingResult result) {
+    public ModelAndView save(@Valid Area area, BindingResult result, RedirectAttributes atributos) {
          
         if(result.hasErrors()) {
         //	result.getAllErrors();
      
         
-            return add(area);
+            return add(area, null);
         }
         
          if(area.getCodigoArea() == null) {
         	area.setDataRegistro(new Date());
         }
         
+         
+         atributos.addFlashAttribute("mensagem", "Área salva com sucesso");
         areas.save(area);
          
         return listar();

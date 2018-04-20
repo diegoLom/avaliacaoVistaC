@@ -60,6 +60,7 @@ import org.springframework.web.context.request.ServletRequestAttributes;
 import org.springframework.web.context.request.WebRequest;
 import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import com.avaliacao.vista.AppErrorController;
 import com.avaliacao.vista.model.Empresa;
@@ -126,41 +127,49 @@ public class EmpresaController implements WebMvcConfigurer  {
 	 
 	
 	 @GetMapping("/add")
-    public ModelAndView add(Empresa empresa) {
+    public ModelAndView add(Empresa empresa, RedirectAttributes attributes) {
          
         ModelAndView mv = new ModelAndView("empresas/cadEmpresas");
         mv.addObject("empresa", empresa);
+        
+        if(attributes != null && empresa.getCodigoEmpresa() != null) {
+        	String mensagem = "Empresa editada com sucesso";
+        	attributes.addFlashAttribute("attributes",mensagem);
+        }
          
         return mv;
     }
      
     @GetMapping("/edit/{id}")
-    public ModelAndView edit(@PathVariable("id") Long id) {
+    public ModelAndView edit(@PathVariable("id") Long id, RedirectAttributes attributes) {
     	
     	Optional<Empresa> empresaO = empresas.findById(id);
     	if(empresaO.get() != null) {
     	 
     	}
          
-        return add(empresaO.get());
+        return add(empresaO.get(), attributes);
     }
      
     @GetMapping("/delete/{id}")
-    public ModelAndView delete(@PathVariable("id") Long id) {
+    public ModelAndView delete(@PathVariable("id") Long id, RedirectAttributes attributes) {
     	
     	Optional<Empresa> empresaO = empresas.findById(id);
     	empresas.delete(empresaO.get());
+    	
+    	String mensagem = "Empresa excluída com sucesso";
+    	attributes.addFlashAttribute("attributes",mensagem);
          
         return listar();
     }
  
     @PostMapping("/save")
-    public ModelAndView save(@Valid Empresa empresa, BindingResult result) {
+    public ModelAndView save(@Valid Empresa empresa, BindingResult result, RedirectAttributes attributes) {
          
         if(result.hasErrors()) {
         //	result.getAllErrors();
         
-            return add(empresa);
+            return add(empresa, null);
         }
         
          if(empresa.getCodigoEmpresa() == null) {
@@ -168,6 +177,8 @@ public class EmpresaController implements WebMvcConfigurer  {
         }
         
         empresas.save(empresa);
+        
+        attributes.addFlashAttribute("mensagem", "Empresa salva com sucesso");
          
         return listar();
     }

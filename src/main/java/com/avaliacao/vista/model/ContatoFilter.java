@@ -1,12 +1,16 @@
 package com.avaliacao.vista.model;
 
 import java.io.Serializable;
+import java.util.Calendar;
 import java.util.Date;
 
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
 
+import org.hibernate.type.descriptor.java.CalendarDateTypeDescriptor;
 import org.springframework.format.annotation.DateTimeFormat;
+
+import com.avaliacao.vista.util.DataUtil;
 
 public class ContatoFilter implements Serializable{
 	
@@ -38,7 +42,7 @@ public class ContatoFilter implements Serializable{
 	}
 
 	public void setDataFinal(Date dataFinal) {
-		this.dataFinal = dataFinal;
+		this.dataFinal = DataUtil.converterUltimaHoraDia(dataFinal);;
 	}
 
 	@NotNull(message="{validation.dataInicial.notNull}")

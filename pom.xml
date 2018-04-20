@@ -133,11 +133,11 @@
 		    <version>${jasperreports-fonts.version}</version>
 		    <scope>compile</scope>
 		</dependency>
-		<dependency>
-		    <groupId>org.postgresql</groupId>
-		    <artifactId>postgresql</artifactId>
-		    <version>9.4-1201-jdbc41</version>
-		</dependency>
+<!-- 		<dependency> -->
+<!-- 		    <groupId>org.postgresql</groupId> -->
+<!-- 		    <artifactId>postgresql</artifactId> -->
+<!-- 		    <version>9.4-1201-jdbc41</version> -->
+<!-- 		</dependency> -->
 		
 
 		

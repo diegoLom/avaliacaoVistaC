@@ -8,6 +8,8 @@ import javax.validation.constraints.NotNull;
 
 import org.springframework.format.annotation.DateTimeFormat;
 
+import com.avaliacao.vista.util.DataUtil;
+
 public class EmpresaFilter implements Serializable{
 	
 	
@@ -26,7 +28,7 @@ public class EmpresaFilter implements Serializable{
 	}
 
 	public void setDataFinal(Date dataFinal) {
-		this.dataFinal = dataFinal;
+		this.dataFinal = DataUtil.converterUltimaHoraDia(dataFinal);
 	}
 
 	@NotNull(message="{validation.dataInicial.notNull}")

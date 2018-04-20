@@ -30,6 +30,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.servlet.ModelAndView;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import com.avaliacao.vista.model.Area;
 import com.avaliacao.vista.model.Contato;
@@ -106,17 +107,45 @@ public class ContatoController {
 		
 	}
 	 
+	 
+	 @PostMapping("/filtrarRelatorio")
+	    public ModelAndView filtrarRel(@Valid ContatoFilter area, BindingResult bindingResult) {
+
+		  if (bindingResult.hasErrors()) {
+			  
+			  ModelAndView modelView = new ModelAndView("contatos/relContatos");
+				modelView.addObject("contatos", contatos.findAll());
+				modelView.addObject(area);
+				
+	            return modelView;
+	        }else {
+	        	ModelAndView modelView = new ModelAndView("contatos/relContatos");
+	  	      	contatosFiltradas = filtrar(area);
+	  			modelView.addObject("contatos", contatosFiltradas);
+	  			modelView.addObject(area);
+	  			
+	             return modelView;
+	        	
+	       }
+		
+	}
+
+	 
 	
 	
 	
 	  
     @GetMapping("/add")
-    public ModelAndView add(Contato contato) {
+    public ModelAndView add(Contato contato, RedirectAttributes attributes) {
          
         ModelAndView mv = new ModelAndView("contatos/cadContatos");
+        
+        
         if(contato.getCodigoContato() == null) {
 	        contato.setArea(new Area());
 	        contato.setEmpresa(new Empresa());
+        }else {
+        	
         }
         mv.addObject("contato", contato);
         mv.addObject("empresas", empresas.findAll());
@@ -134,36 +163,41 @@ public class ContatoController {
     }
      
     @GetMapping("/edit/{id}")
-    public ModelAndView edit(@PathVariable("id") Long id) {
+    public ModelAndView edit(@PathVariable("id") Long id,  RedirectAttributes attributes) {
     	
     	Optional<Contato> areaO = contatos.findById(id);
     	
     	
-        return add(areaO.get());
+        return add(areaO.get(), attributes);
     }
      
     @GetMapping("/delete/{id}")
-    public ModelAndView delete(@PathVariable("id") Long id) {
+    public ModelAndView delete(@PathVariable("id") Long id, RedirectAttributes attributes) {
     	
     	Optional<Contato> areaO = contatos.findById(id);
     	contatos.delete(areaO.get());
+    	attributes.addFlashAttribute("mensagem", "Contato excluído com sucesso!");
          
         return listar();
     }
  
     @PostMapping("/save")
-    public ModelAndView save(@Valid Contato contato, BindingResult result) {
+    public ModelAndView save(@Valid Contato contato, BindingResult result, RedirectAttributes attributes) {
          
         if(result.hasErrors()) {
         //	result.getAllErrors();
      
         
-            return add(contato);
+            return add(contato, null);
         }
         
          if(contato.getCodigoContato() == null) {
         	contato.setDataRegistro(new Date());
         }
+        
+     	
+	        String mensagem = "Contato salvo com sucesso!";
+	        attributes.addFlashAttribute("mensagem", mensagem);
         
         contatos.save(contato);
          
