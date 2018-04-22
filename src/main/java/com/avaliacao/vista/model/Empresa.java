@@ -85,7 +85,7 @@ public class Empresa implements Serializable{
 				return format.valueToString(getCnpj());
 			} catch (ParseException e) {
 				// TODO Auto-generated catch block
-				e.printStackTrace();
+			//	e.printStackTrace();
 			}
 		}
 		return cnpjFormatado;

@@ -63,9 +63,11 @@ import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import com.avaliacao.vista.AppErrorController;
+import com.avaliacao.vista.model.Contato;
 import com.avaliacao.vista.model.Empresa;
 import com.avaliacao.vista.model.EmpresaFilter;
 import com.avaliacao.vista.model.ErroValue;
+import com.avaliacao.vista.repository.Contatos;
 import com.avaliacao.vista.repository.Empresas;
 import com.avaliacao.vista.util.Geral;
 import com.avaliacao.vista.view.ExcelView;
@@ -77,6 +79,11 @@ public class EmpresaController implements WebMvcConfigurer  {
 	
 	@Autowired
 	private Empresas empresas; 
+	
+	@Autowired
+	private Contatos contatos; 
+	
+	
 	private Collection empresasFiltradas;
 	
 	  @Autowired
@@ -96,6 +103,7 @@ public class EmpresaController implements WebMvcConfigurer  {
 		ModelAndView modelView = new ModelAndView("empresas/listarEmpresas");
 		modelView.addObject("empresas", empresas.findAll());
 		modelView.addObject(new EmpresaFilter());
+		
 		
 		
 		return modelView;
@@ -152,19 +160,33 @@ public class EmpresaController implements WebMvcConfigurer  {
     }
      
     @GetMapping("/delete/{id}")
-    public ModelAndView delete(@PathVariable("id") Long id, RedirectAttributes attributes) {
+    public String delete(@PathVariable("id") Long id, RedirectAttributes attributes) {
     	
     	Optional<Empresa> empresaO = empresas.findById(id);
-    	empresas.delete(empresaO.get());
+    	
+    	java.util.List<Contato> contatosF = contatos.findByEmpresa(empresaO.get());
+    	
     	
     	String mensagem = "Empresa excluída com sucesso";
-    	attributes.addFlashAttribute("attributes",mensagem);
+    	String tipoMensagem = "mensagem";
+    	
+    	if(contatosF!= null && contatosF.size() == 0) {
+    		empresas.delete(empresaO.get());
+    	}else {
+    		mensagem = "Não foi possível excluir empresa, a mesma possível vínculo com Contatos";
+    		tipoMensagem += "Erro";
+    	}
+    	
+    	
+    	attributes.addFlashAttribute(tipoMensagem,mensagem);
          
-        return listar();
+    	
+    	
+        return "redirect:/empresas";
     }
  
     @PostMapping("/save")
-    public ModelAndView save(@Valid Empresa empresa, BindingResult result, RedirectAttributes attributes) {
+    public ModelAndView save(@Valid Empresa empresa, BindingResult result, RedirectAttributes attributes, HttpServletRequest request) {
          
         if(result.hasErrors()) {
         //	result.getAllErrors();

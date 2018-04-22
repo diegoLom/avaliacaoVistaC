@@ -21,9 +21,12 @@
   				<h1 class="panel-title">Pesquisa de Contatos </h1>  
   			<div class="container-fluid"> 
  		 	   <form  method="POST" th:object="${contatoFilter}" th:action="@{/contatos/filtrarRelatorio}" style="margin: 20px 0"> 
+ 		 	   
+ 		 	   <div class="alert alert-danger" th:if="${#fields.hasAnyErrors()}">
+ 		 	   		<button type="button" class="close" data-dismiss="alert" ><span aria-hidden="true">&times;</span></button>
  		 			<p th:if="${#fields.hasErrors('dataInicial')}" class="erro-mensagem" th:errors="*{dataInicial}">Data Inicial</p> 
  			 		<p th:if="${#fields.hasErrors('dataFinal')}" class="erro-mensagem" th:errors="*{dataFinal}">Data Final</p>            
- 			
+ 				</div>
  					<div class="row">
 	 			        	<div class="form-group  col-sm-2" >
 				        	  	<label for="nomeEmpresa">Cód. CPF</label>
@@ -66,11 +69,11 @@
 		        	<div class="row">
 		        	  	<div class="form-group  col-sm-2" >
 		        	  		<label></label>
-		        	  		<button type="submit" class="btn btn-primary">Pesquisar</button>
+		        	  		<button type="submit" class="btn btn-primary" name="pesquisar" value="pesquisar">Pesquisar</button>
 		        	  	</div>
 		        	  	<div class="form-group  col-sm-2" >
 		        	  		<label></label>
-		        	  			<a class="btn btn-sm btn-primary" th:href="@{/contatos/downloadRelatorio}" >Imprimir</a>
+		        	  			<button type="submit" class="btn btn-primary" name="imprimir" value="imprimir">Imprimir</button>
 		        	  	</div>			
 		        	  	<div class="form-group  col-sm-2" >	
 		        	  		<label></label>
@@ -101,17 +104,13 @@
 	 					<tr th:each="contato:${contatos}"> 
 	 						<td th:text="${contato.empresa.cnpjFormatado}"> </td> 
 	 						<td th:text="${contato.empresa.nomeEmpresa}"> </td>
+	 						<td th:text="${contato.nomeContato}"> </td>
 	 						<td th:text="${contato.cpfFormatado}"> </td>
-	 						<td th:text="${contato.telefoneResidencial}"> </td>
-	 						<td th:text="${contato.celular}"> </td>
+	 						<td th:text="${contato.telefoneResidencialFormatado}"> </td>
+	 						<td th:text="${contato.telefoneCelularFormatado}"> </td>
 	 						<td th:text="${contato.email}"> </td>
 	 						<td th:text="${contato.area.descricaoArea}"> </td>
-	 						<td>
-	 						    <div class="btn-group pull-right">
-                                    <a class="btn btn-sm btn-primary" th:href="@{/contatos/edit/{id}(id=${contato.codigoEmpresa})}" >Editar</a>
-                                    <a class="delete btn btn-sm btn-danger" th:href="@{/contatos/delete/{id}(id=${contato.codigoEmpresa})}">Excluir</a>
-                               </div>
-                            </td>
+	 					
                         </tr> 
 	 			</table>
             </div>

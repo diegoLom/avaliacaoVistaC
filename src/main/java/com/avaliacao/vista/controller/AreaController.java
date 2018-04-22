@@ -65,8 +65,10 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import com.avaliacao.vista.AppErrorController;
 import com.avaliacao.vista.model.Area;
 import com.avaliacao.vista.model.AreaFilter;
+import com.avaliacao.vista.model.Contato;
 import com.avaliacao.vista.model.ErroValue;
 import com.avaliacao.vista.repository.Areas;
+import com.avaliacao.vista.repository.Contatos;
 import com.avaliacao.vista.util.Geral;
 import com.avaliacao.vista.view.ExcelView;
 
@@ -86,8 +88,11 @@ public class AreaController implements WebMvcConfigurer  {
 	private Areas areas; 
 	private Collection areasFiltradas;
 	
-	  @Autowired
-	    private EntityManager entityManager;
+	@Autowired
+    private EntityManager entityManager;
+  
+	@Autowired
+	private Contatos contatos;
 
 	    private Session getSession() {
 	    	if(entityManager != null)
@@ -162,14 +167,26 @@ public class AreaController implements WebMvcConfigurer  {
     }
      
     @GetMapping("/delete/{id}")
-    public ModelAndView delete(@PathVariable("id") Long id, RedirectAttributes atributos) {
+    public String delete(@PathVariable("id") Long id, RedirectAttributes atributos) {
     	
     	Optional<Area> areaO = areas.findById(id);
-    	areas.delete(areaO.get());
-         
-    	atributos.addFlashAttribute("Área excluída com sucesso");
+    	java.util.List<Contato> contatosF = contatos.findByArea(areaO.get());
     	
-        return listar();
+    	
+    	String mensagem = "Empresa excluída com sucesso";
+    	String tipoMensagem = "mensagem";
+    	
+    	if(contatosF!= null && contatosF.size() == 0) {
+    		areas.delete(areaO.get());
+    	}else {
+    		mensagem = "Não foi possível excluir area, a mesma possível vínculo com Contatos";
+    		tipoMensagem += "Erro";
+    	}
+    	
+    	
+    	atributos.addFlashAttribute(tipoMensagem,mensagem);
+         
+    	return "redirect:/areas";
     }
  
     @PostMapping("/save")

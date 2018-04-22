@@ -28,6 +28,9 @@ public class AvaliacaoVistaApplicationTests {
 	}
 
 	public static void main(String[] args) {
+		
+//		GeradorRelatorio.gerarRelatorio(null);
+		
 		System.out.println(System.getProperty("user.dir"));
 	
 	}

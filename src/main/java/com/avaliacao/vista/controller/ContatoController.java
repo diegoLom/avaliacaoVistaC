@@ -1,4 +1,10 @@
 package com.avaliacao.vista.controller;
+import static org.assertj.core.api.Assertions.assertThatIllegalStateException;
+import static org.mockito.Mockito.RETURNS_DEEP_STUBS;
+
+import java.io.ByteArrayOutputStream;
+import java.io.OutputStream;
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Date;
 import java.util.HashMap;
@@ -16,21 +22,30 @@ import javax.persistence.criteria.CriteriaBuilder;
 import javax.persistence.criteria.CriteriaQuery;
 import javax.persistence.criteria.Predicate;
 import javax.persistence.criteria.Root;
+import javax.servlet.ServletContext;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.validation.Valid;
 
+
 import org.hibernate.Session;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.web.servlet.ServletContextInitializer;
 import org.springframework.format.annotation.DateTimeFormat;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.MediaType;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.context.request.RequestAttributes;
 import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
+
 
 import com.avaliacao.vista.model.Area;
 import com.avaliacao.vista.model.Contato;
@@ -39,6 +54,7 @@ import com.avaliacao.vista.model.Empresa;
 import com.avaliacao.vista.repository.Areas;
 import com.avaliacao.vista.repository.Contatos;
 import com.avaliacao.vista.repository.Empresas;
+import com.avaliacao.vista.services.GeradorRelatorio;
 import com.avaliacao.vista.util.Geral;
 import com.avaliacao.vista.view.ExcelView;
 import com.avaliacao.vista.view.PdfView;
@@ -47,7 +63,8 @@ import com.avaliacao.vista.view.PdfView;
 @RequestMapping("/contatos")
 public class ContatoController {
 	
-	
+	@Autowired
+	ServletContext context; 
 	
 	@Autowired
 	private Contatos contatos;
@@ -91,7 +108,7 @@ public class ContatoController {
 		  if (bindingResult.hasErrors()) {
 			  
 			  ModelAndView modelView = new ModelAndView("contatos/listarContatos");
-				modelView.addObject("contatos", contatos.findAll());
+				modelView.addObject("contatos", new ArrayList());
 				modelView.addObject(area);
 				
 	            return modelView;
@@ -108,18 +125,19 @@ public class ContatoController {
 	}
 	 
 	 
-	 @PostMapping("/filtrarRelatorio")
-	    public ModelAndView filtrarRel(@Valid ContatoFilter area, BindingResult bindingResult) {
+
+	    @RequestMapping(params = "pesquisar", method = RequestMethod.POST, path="/filtrarRelatorio")
+	    public ModelAndView filtroRelatorio(@Valid ContatoFilter area, BindingResult bindingResult) {
 
 		  if (bindingResult.hasErrors()) {
 			  
-			  ModelAndView modelView = new ModelAndView("contatos/relContatos");
-				modelView.addObject("contatos", contatos.findAll());
+			  ModelAndView modelView = new ModelAndView("relatorios/relContatos");
+				modelView.addObject("contatos", new ArrayList());
 				modelView.addObject(area);
 				
 	            return modelView;
 	        }else {
-	        	ModelAndView modelView = new ModelAndView("contatos/relContatos");
+	        	ModelAndView modelView = new ModelAndView("relatorios/relContatos");
 	  	      	contatosFiltradas = filtrar(area);
 	  			modelView.addObject("contatos", contatosFiltradas);
 	  			modelView.addObject(area);
@@ -129,23 +147,14 @@ public class ContatoController {
 	       }
 		
 	}
-
 	 
-	
-	
-	
-	  
-    @GetMapping("/add")
-    public ModelAndView add(Contato contato, RedirectAttributes attributes) {
+	 @GetMapping("/add")
+    public ModelAndView add(Contato contato) {
          
         ModelAndView mv = new ModelAndView("contatos/cadContatos");
-        
-        
         if(contato.getCodigoContato() == null) {
 	        contato.setArea(new Area());
 	        contato.setEmpresa(new Empresa());
-        }else {
-        	
         }
         mv.addObject("contato", contato);
         mv.addObject("empresas", empresas.findAll());
@@ -163,12 +172,12 @@ public class ContatoController {
     }
      
     @GetMapping("/edit/{id}")
-    public ModelAndView edit(@PathVariable("id") Long id,  RedirectAttributes attributes) {
+    public ModelAndView edit(@PathVariable("id") Long id) {
     	
     	Optional<Contato> areaO = contatos.findById(id);
     	
     	
-        return add(areaO.get(), attributes);
+        return add(areaO.get());
     }
      
     @GetMapping("/delete/{id}")
@@ -176,28 +185,26 @@ public class ContatoController {
     	
     	Optional<Contato> areaO = contatos.findById(id);
     	contatos.delete(areaO.get());
-    	attributes.addFlashAttribute("mensagem", "Contato excluído com sucesso!");
+    	
+    	String mensagem = "Contato excluído com sucesso";
+    	attributes.addFlashAttribute("mesagem", mensagem);
          
         return listar();
     }
  
     @PostMapping("/save")
-    public ModelAndView save(@Valid Contato contato, BindingResult result, RedirectAttributes attributes) {
+    public ModelAndView save(@Valid Contato contato, BindingResult result) {
          
         if(result.hasErrors()) {
         //	result.getAllErrors();
      
         
-            return add(contato, null);
+            return add(contato);
         }
         
          if(contato.getCodigoContato() == null) {
         	contato.setDataRegistro(new Date());
         }
-        
-     	
-	        String mensagem = "Contato salvo com sucesso!";
-	        attributes.addFlashAttribute("mensagem", mensagem);
         
         contatos.save(contato);
          
@@ -275,43 +282,47 @@ public class ContatoController {
     @GetMapping("/prepararDownload")
 	public ModelAndView prepararDownload() {
 		ModelAndView modelView = new ModelAndView("relatorios/relContatos");
-		//modelView.addObject("contatos", contatos.findAll());
-		
 		modelView.addObject(new ContatoFilter());
 		
 		
 		return modelView;
 	}
     
+
     
-    @PostMapping("/downloadRelatorio")
-    public ModelAndView getMyDataP(ContatoFilter area, HttpServletRequest request, HttpServletResponse response) {
-        
-    	Map<String, Object> model = new HashMap<String, Object>();
-    	contatosFiltradas = filtrar(area);
+    @RequestMapping(params = "imprimir", method = RequestMethod.POST, path="/filtrarRelatorio")
+    public ModelAndView getMyDataP(@Valid ContatoFilter contato, BindingResult bindingResult, HttpServletRequest request, HttpServletResponse response) throws Exception {
+	
+		
+    	if(!bindingResult.hasErrors()) {
     	
-        model.put("results",contatosFiltradas);
-      
-              
-        LinkedHashMap<String, String> columnsTitle = new LinkedHashMap<String, String>();
-        
-        columnsTitle.put("empresa.cnpj","CNPJ Empresa");
-        columnsTitle.put("empresa.nomeEmpresa","Nome da Empresa");
-        columnsTitle.put("nomeContato","Nome Contato");
-        columnsTitle.put("cpfFormatado", "CPF");
-        columnsTitle.put("telefoneResidencialFormatado" , "Telefone Residencial");
-        columnsTitle.put("telefoneCelularFormatado" , "Celular");
-        columnsTitle.put("email" , "Email");
-        columnsTitle.put("area.descricaoArea" , "Área"); 
-        
+		
+    	contatosFiltradas = filtrar(contato);
     	
-        model.put("columnsTitle", columnsTitle);
-        
-        response.setContentType( "application/pdf" );
-        response.setHeader( "Content-disposition", "attachment; filename=contatos.pdf" );
-        
-        return new ModelAndView(new PdfView(), model);
-    }
+		byte[] relatorio = GeradorRelatorio.gerarRelatorio("/relatorios/relListaContatos.jrxml", null, new ArrayList<Contato>(contatosFiltradas)); 
+		response.setContentType("application/pdf");
+		
+		 
+
+         // Make sure to show the download dialog
+         response.setHeader("Content-disposition","attachment; filename=relContatos.pdf");
+
+		 OutputStream responseOutputStream = response.getOutputStream();
+		 responseOutputStream.write(relatorio);
+		 responseOutputStream.flush();
+		
+		return 		 prepararDownload();
+    	}else {
+    		ModelAndView modelView = new ModelAndView("relatorios/relContatos");
+			
+			modelView.addObject(contato);
+			
+            return modelView;
+    		
+    	}
+	}
+    
+
     
 	private List<Object> filtrar(ContatoFilter contato){
 	    	
@@ -322,31 +333,33 @@ public class ContatoController {
 					
 		Root<?> root = criteriaQuery.from(Contato.class);
 		criteriaQuery.select(root);
-		
+		List<Predicate> predicados = new ArrayList<Predicate>();
 		if(contato.getDataInicial() != null && contato.getDataFinal() != null) {
 			Predicate predicate = criteriaBuilder.between(root.get("dataRegistro"),contato.getDataInicial(), contato.getDataFinal());
-			criteriaQuery.where(predicate);
+			predicados.add(predicate);
 		}
 		
 		Object cpf = Geral.resultadoOuNulo(contato, "contato.cpf");
 		if(cpf != null)
-			criteriaQuery.where(criteriaBuilder.equal(root.get("cpf"), cpf));
+			predicados.add(criteriaBuilder.equal(root.get("cpf"), cpf));
 		
 		Object nomeContato = Geral.resultadoOuNulo(contato, "contato.nomeContato");
 		if(nomeContato != null && !nomeContato.toString().isEmpty())
-			criteriaQuery.where(criteriaBuilder.like(root.get("nomeContato"), contato.toString()+"%"));
+			predicados.add(criteriaBuilder.like(root.get("nomeContato"), contato.toString()+"%"));
 		
 		Object cnpj = Geral.resultadoOuNulo(contato, "contato.empresa.cnpj");
 		if(cnpj != null)
-			criteriaQuery.where(criteriaBuilder.equal(root.get("empresa.cnpj"), cnpj));
+			predicados.add(criteriaBuilder.equal(root.get("empresa.cnpj"), cnpj));
 		
 		Object nomeEmpresa = Geral.resultadoOuNulo(contato, "contato.empresa.nomeEmpresa");
 		if(nomeEmpresa != null && !nomeEmpresa.toString().isEmpty())
-			criteriaQuery.where(criteriaBuilder.like(root.get("empresa.nomeEmpresa"), nomeEmpresa+"%"));
+			predicados.add(criteriaBuilder.like(root.get("empresa").get("nomeEmpresa") , nomeEmpresa+"%"));
 		
 		Object area = Geral.resultadoOuNulo(contato, "contato.area.descricaoArea");
 		if(area != null && !area.toString().isEmpty())
-			criteriaQuery.where(criteriaBuilder.like(root.get("area.descricaoArea"), area+"%"));
+			predicados.add(criteriaBuilder.like(root.get("area.descricaoArea"), area+"%"));
+		
+		criteriaQuery = criteriaQuery.where(criteriaBuilder.and(predicados.toArray(new Predicate[] {})));
 		
 		TypedQuery<Object> typedQuery = getSession().createQuery( criteriaQuery);
 		
@@ -366,3 +379,5 @@ public class ContatoController {
 
 
 }
+
+

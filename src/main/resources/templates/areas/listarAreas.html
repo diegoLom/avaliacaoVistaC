@@ -21,8 +21,11 @@
   				<h1 class="panel-title">Pesquisa de Áreas </h1>  
   			<div class="panel-body"> 
  		 	   <form class="form-inline" method="POST" th:object="${areaFilter}" th:action="@{/areas}" style="margin: 20px 0"> 
- 		 			<p th:if="${#fields.hasErrors('dataInicial')}" class="erro-mensagem" th:errors="*{dataInicial}">Data Inicial</p> 
- 			 		<p th:if="${#fields.hasErrors('dataFinal')}" class="erro-mensagem" th:errors="*{dataFinal}">Data Final</p>            
+ 		 			<div class="alert alert-danger" th:if="${#fields.hasAnyErrors()}">
+ 		 				<button type="button" class="close" data-dismiss="alert" ><span aria-hidden="true">&times;</span></button>
+	 		 			<p th:if="${#fields.hasErrors('dataInicial')}" class="erro-mensagem" th:errors="*{dataInicial}">Data Inicial</p> 
+	 			 		<p th:if="${#fields.hasErrors('dataFinal')}" class="erro-mensagem" th:errors="*{dataFinal}">Data Final</p>            
+ 					</div>            
  			        <div class="form-group"> 
  			        	<label for="descricaoArea">Descrição</label> 
  						<input type="text" class="form-control" placeholder="Descrição" th:field="*{descricaoArea}"/> 
@@ -42,6 +45,7 @@
         
       <div class="panel-body">
             <div class="table-responsive">
+            <th:block th:include="fragments/Mensagens"></th:block>
                 <table class="table table-sm table-striped table-hover table-bordered">
                 	<thead>
 						<tr> 

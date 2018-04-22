@@ -16,13 +16,17 @@
         </div>
         
         <div class="panel panel-default" style="margin:10px" > 
-    	 
+    	 	 
+ 		
   			<div class="panel-heading">  
   				<h1 class="panel-title">Pesquisa de Empresas </h1>  
   			<div class="container-fluid"> 
- 		 	   <form  method="POST" th:object="${empresaFilter}" th:action="@{/empresas}" style="margin: 20px 0"> 
+ 		 	   <form  method="POST" th:object="${empresaFilter}" th:action="@{/empresas}" style="margin: 20px 0">
+ 		 	   <div class="alert alert-danger" th:if="${#fields.hasAnyErrors()}">
+ 		 	   		<button type="button" class="close" data-dismiss="alert" ><span aria-hidden="true">&times;</span></button> 
  		 			<p th:if="${#fields.hasErrors('dataInicial')}" class="erro-mensagem" th:errors="*{dataInicial}">Data Inicial</p> 
- 			 		<p th:if="${#fields.hasErrors('dataFinal')}" class="erro-mensagem" th:errors="*{dataFinal}">Data Final</p>            
+ 			 		<p th:if="${#fields.hasErrors('dataFinal')}" class="erro-mensagem" th:errors="*{dataFinal}">Data Final</p>
+ 			 	</div>	            
  			        <div class="row">
 		        	  <div class="form-group  col-sm-8" >
 		        		<label for="nomeEmpresa">Nome</label> 
@@ -64,6 +68,7 @@
         
       <div class="panel-body">
             <div class="table-responsive">
+            <th:block th:include="fragments/Mensagens"></th:block>
                 <table class="table table-sm table-striped table-hover table-bordered">
                 	<thead>
 						<tr> 
