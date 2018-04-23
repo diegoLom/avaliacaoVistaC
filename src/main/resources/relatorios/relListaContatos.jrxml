@@ -114,49 +114,49 @@
 	<detail>
 		<band height="26" splitType="Stretch">
 			<textField>
-				<reportElement stretchType="ContainerBottom" x="0" y="0" width="70" height="22" uuid="64b87d68-bc6c-4357-b9fd-df7f428f9664">
+				<reportElement stretchType="ElementGroupBottom" x="0" y="0" width="70" height="22" uuid="64b87d68-bc6c-4357-b9fd-df7f428f9664">
 					<property name="com.jaspersoft.studio.spreadsheet.connectionID" value="ee21cb85-9aca-45ac-9a45-d31be71c5456"/>
 				</reportElement>
 				<textFieldExpression><![CDATA[$F{empresa.cnpjFormatado}]]></textFieldExpression>
 			</textField>
 			<textField>
-				<reportElement stretchType="ContainerBottom" x="71" y="0" width="150" height="22" uuid="8076b95b-4074-41bf-83f3-cce3f38cdffa">
+				<reportElement stretchType="ElementGroupBottom" x="71" y="0" width="150" height="22" uuid="8076b95b-4074-41bf-83f3-cce3f38cdffa">
 					<property name="com.jaspersoft.studio.spreadsheet.connectionID" value="b40722d1-f7f1-48bb-9307-13c8607eae9a"/>
 				</reportElement>
 				<textFieldExpression><![CDATA[$F{empresa.nomeEmpresa}]]></textFieldExpression>
 			</textField>
 			<textField>
-				<reportElement stretchType="ContainerBottom" x="221" y="0" width="150" height="22" uuid="4ad55d78-5326-4438-ad23-088a4d6866f8">
+				<reportElement stretchType="ElementGroupBottom" x="221" y="0" width="150" height="22" uuid="4ad55d78-5326-4438-ad23-088a4d6866f8">
 					<property name="com.jaspersoft.studio.spreadsheet.connectionID" value="1ad32089-f556-4991-b058-58bed4a642c3"/>
 				</reportElement>
 				<textFieldExpression><![CDATA[$F{nomeContato}]]></textFieldExpression>
 			</textField>
 			<textField>
-				<reportElement stretchType="ContainerBottom" x="371" y="0" width="60" height="22" uuid="8f97f6b0-814d-4d9b-adc3-642c72a4d234">
+				<reportElement stretchType="ElementGroupBottom" x="371" y="0" width="60" height="22" uuid="8f97f6b0-814d-4d9b-adc3-642c72a4d234">
 					<property name="com.jaspersoft.studio.spreadsheet.connectionID" value="0a8dd148-9758-47c1-9518-e9e73aa7d3e8"/>
 				</reportElement>
 				<textFieldExpression><![CDATA[$F{cpfFormatado}]]></textFieldExpression>
 			</textField>
 			<textField>
-				<reportElement stretchType="ContainerBottom" x="431" y="0" width="64" height="22" uuid="a44fa346-f52e-4608-9311-bf2584b426a3">
+				<reportElement stretchType="ElementGroupBottom" x="431" y="0" width="64" height="22" uuid="a44fa346-f52e-4608-9311-bf2584b426a3">
 					<property name="com.jaspersoft.studio.spreadsheet.connectionID" value="4981772a-e4eb-43ef-ab22-d51afe634f79"/>
 				</reportElement>
 				<textFieldExpression><![CDATA[$F{telefoneResidencialFormatado}]]></textFieldExpression>
 			</textField>
 			<textField>
-				<reportElement stretchType="ContainerBottom" x="495" y="0" width="64" height="22" uuid="f98a6d54-9d1a-4978-b441-ade4676974f1">
+				<reportElement stretchType="ElementGroupBottom" x="495" y="0" width="64" height="22" uuid="f98a6d54-9d1a-4978-b441-ade4676974f1">
 					<property name="com.jaspersoft.studio.spreadsheet.connectionID" value="49104c33-ada3-48eb-ac20-b9544749dc8b"/>
 				</reportElement>
 				<textFieldExpression><![CDATA[$F{telefoneCelularFormatado}]]></textFieldExpression>
 			</textField>
 			<textField>
-				<reportElement stretchType="ContainerBottom" x="559" y="0" width="120" height="22" uuid="e82bcb10-dad8-4eda-a55f-5a8163d13e8c">
+				<reportElement stretchType="ElementGroupBottom" x="559" y="0" width="120" height="22" uuid="e82bcb10-dad8-4eda-a55f-5a8163d13e8c">
 					<property name="com.jaspersoft.studio.spreadsheet.connectionID" value="ab23bb07-f5e1-4327-9a03-2cf0ba93a0f4"/>
 				</reportElement>
 				<textFieldExpression><![CDATA[$F{email}]]></textFieldExpression>
 			</textField>
 			<textField>
-				<reportElement stretchType="ContainerBottom" x="679" y="0" width="120" height="22" uuid="103549ca-ca89-4f89-9ef8-7e926f58591d">
+				<reportElement stretchType="ElementGroupBottom" x="679" y="0" width="120" height="22" uuid="103549ca-ca89-4f89-9ef8-7e926f58591d">
 					<property name="com.jaspersoft.studio.spreadsheet.connectionID" value="2f94188d-b0c2-408a-82cf-fe1f36c16766"/>
 				</reportElement>
 				<textFieldExpression><![CDATA[$F{area.descricaoArea}]]></textFieldExpression>
