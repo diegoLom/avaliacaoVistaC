@@ -167,13 +167,13 @@
 		<band height="45" splitType="Stretch"/>
 	</columnFooter>
 	<pageFooter>
-		<band height="61" splitType="Stretch">
+		<band height="56" splitType="Stretch">
 			<staticText>
 				<reportElement x="245" y="15" width="376" height="30" uuid="cc1c856c-070b-4359-a558-c5b0cda4be94"/>
 				<textElement textAlignment="Center" markup="none">
 					<font size="10" isBold="false"/>
 				</textElement>
-				<text><![CDATA[CedroTech. Vista de Avaliação.]]></text>
+				<text><![CDATA[Vista de Avaliação.]]></text>
 			</staticText>
 			<textField>
 				<reportElement positionType="Float" x="759" y="26" width="30" height="30" uuid="60541ed2-81d4-4f4c-908a-bebdabdd94a9"/>

@@ -27,7 +27,7 @@ import com.avaliacao.vista.services.UniqueKey;
 
 @Entity
 @Table(name="contato")
-@UniqueKey(columnNames = {"cpf", "nomeContato", "empresa.codigoEmpresa", "area.codigoArea" }, propertyId ="codigoContato") 
+@UniqueKey(columnNames = {"cpf", "nomeContato", "empresa.codigoEmpresa", "area.codigoArea" }, propertyId ="codigoContato", multiplasValidacoes= true) 
 public class Contato implements Serializable {
 	
 
